@@ -14,14 +14,14 @@ export class Payins {
         this.DLOCAL_SECRET_KEY = process.env.DLOCAL_SECRET_KEY as string;
     }
 
-    async createPayment(payload: any): Promise<any> {
+    async createPayment(payload: any, secure: boolean): Promise<any> {
         const data = JSON.stringify(payload);
         const timestamp = new Date().toJSON();
         const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY, data);
 
         const config: AxiosRequestConfig = {
             method: 'post',
-            url: `${this.DLOCAL_HOST}/secure_payments`,
+            url: `${this.DLOCAL_HOST}/${secure ? 'secure_payments' : 'payments'}`,
             headers: {
                 'X-Date': timestamp,
                 'X-Login': this.DLOCAL_X_LOGIN,
@@ -72,13 +72,65 @@ export class Payins {
         }
     }
 
-    async getPaymentMethods(iso: string): Promise<any> {
+    async getPaymentStatus(paymentId: string): Promise<any> {
         const timestamp = new Date().toJSON();
-
-        console.log(this.DLOCAL_X_LOGIN, this.DLOCAL_TRANS_KEY);
-
         const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
 
+        const config: AxiosRequestConfig = {
+            method: 'get',
+            url: `${this.DLOCAL_HOST}/payments/${paymentId}/status`,
+            headers: {
+                'X-Date': timestamp,
+                'X-Login': this.DLOCAL_X_LOGIN,
+                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'Authorization': authorization,
+                'Content-Type': 'application/json',
+            }
+        };
+
+        try {
+            const response = await axios.request(config);
+            return response.data;
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error) && error.response) {
+                throw error.response.data.message;
+            } else {
+                throw (error as Error).message;
+            }
+        }
+    }
+
+    async cancelPayment(paymentId: string): Promise<any> {
+        const timestamp = new Date().toJSON();
+        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
+
+        const config: AxiosRequestConfig = {
+            method: 'post',
+            url: `${this.DLOCAL_HOST}/payments/${paymentId}/cancel`,
+            headers: {
+                'X-Date': timestamp,
+                'X-Login': this.DLOCAL_X_LOGIN,
+                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'Authorization': authorization,
+                'Content-Type': 'application/json',
+            }
+        };
+
+        try {
+            const response = await axios.request(config);
+            return response.data;
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error) && error.response) {
+                throw error.response.data.message;
+            } else {
+                throw (error as Error).message;
+            }
+        }
+    }
+
+    async getPaymentMethods(iso: string): Promise<any> {
+        const timestamp = new Date().toJSON();
+        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
         const config: AxiosRequestConfig = {
             method: 'get',
             url: `${this.DLOCAL_HOST}/payments-methods?country=${iso}`,
@@ -123,8 +175,6 @@ export class Payins {
             const response = await axios.request(config);
             return response.data;
         } catch (error: unknown) {
-            console.log(error);
-
             if (axios.isAxiosError(error) && error.response) {
                 throw error.response.data.message;
             } else {
