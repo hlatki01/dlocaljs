@@ -1,0 +1,27 @@
+{
+  "name": "dlocaljs",
+  "version": "1.0.0",
+  "description": "git",
+  "main": "index.js",
+  "keywords": [
+    "dlocal",
+    "payment",
+    "api",
+    "library"
+  ],
+  "author": "Luis Hlatki",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hlatki01/dlocaljs.git"
+  }
+}
