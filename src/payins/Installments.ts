@@ -8,32 +8,27 @@ interface InstallmentsPayload {
 
 import axios, { AxiosRequestConfig } from 'axios';
 import { calculatePayinsSignature } from '../misc/Generators';
+import { Instance } from '../Instance';
 
 export class Installments {
-    private readonly DLOCAL_HOST: string;
-    private readonly DLOCAL_X_LOGIN: string;
-    private readonly DLOCAL_TRANS_KEY: string;
-    private readonly DLOCAL_SECRET_KEY: string;
+    private readonly dLocal: Instance; // Store the DLocal instance
 
-    constructor() {
-        this.DLOCAL_HOST = process.env.DLOCAL_HOST as string;
-        this.DLOCAL_X_LOGIN = process.env.DLOCAL_X_LOGIN as string;
-        this.DLOCAL_TRANS_KEY = process.env.DLOCAL_TRANS_KEY as string;
-        this.DLOCAL_SECRET_KEY = process.env.DLOCAL_SECRET_KEY as string;
+    constructor(dLocal: Instance) {
+        this.dLocal = dLocal;
     }
 
     async createInstallmentsPlan(payload: InstallmentsPayload): Promise<any> {
         const data = JSON.stringify(payload);
         const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY, data);
+        const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey, data);
 
         const config: AxiosRequestConfig = {
             method: 'post',
-            url: `${this.DLOCAL_HOST}/installments-plans`,
+            url: `${this.dLocal.getConfig().host}/installments-plans`,
             headers: {
                 'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'X-Login': this.dLocal.getConfig().xLogin,
+                'X-Trans-Key': this.dLocal.getConfig().transKey,
                 'Authorization': authorization,
                 'Content-Type': 'application/json',
             },

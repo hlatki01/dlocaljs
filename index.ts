@@ -1,9 +1,5 @@
 // index.ts
-import { Payins } from './src/payins/Payins';
-import { Installments } from './src/payins/Installments';
-import { Cards } from './src/payins/Cards';
-import { Customers } from './src/payins/Customers';
-import { ExchangeRate } from './src/payins/ExchangeRate';
-import { PaymentMethods } from './src/payins/PaymentMethods';
+import { Instance as dLocalInstance } from './src/Instance';
 
-export { Payins, Installments, Cards, Customers, ExchangeRate, PaymentMethods };
+// Export classes with dLocal instance passed to their constructors
+export default dLocalInstance;

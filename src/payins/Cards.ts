@@ -1,31 +1,26 @@
-import axios, { AxiosRequestConfig } from 'axios'; // Import AxiosRequestConfig
+import axios, { AxiosRequestConfig } from 'axios';
 import { calculatePayinsSignature } from '../misc/Generators';
+import { Instance } from '../Instance'; // Import the Instance class
 
 export class Cards {
-    private readonly DLOCAL_HOST: string;
-    private readonly DLOCAL_X_LOGIN: string;
-    private readonly DLOCAL_TRANS_KEY: string;
-    private readonly DLOCAL_SECRET_KEY: string;
+    private readonly dLocal: Instance; // Store the DLocal instance
 
-    constructor() {
-        this.DLOCAL_HOST = process.env.DLOCAL_HOST as string;
-        this.DLOCAL_X_LOGIN = process.env.DLOCAL_X_LOGIN as string;
-        this.DLOCAL_TRANS_KEY = process.env.DLOCAL_TRANS_KEY as string;
-        this.DLOCAL_SECRET_KEY = process.env.DLOCAL_SECRET_KEY as string;
+    constructor(dLocal: Instance) {
+        this.dLocal = dLocal;
     }
 
     async createCard(payload: any): Promise<any> {
         const data = JSON.stringify(payload);
         const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY, data);
+        const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey, data);
 
         const config: AxiosRequestConfig = {
             method: 'post',
-            url: `${this.DLOCAL_HOST}/secure_cards`,
+            url: `${this.dLocal.getConfig().host}/secure_cards`,
             headers: {
                 'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'X-Login': this.dLocal.getConfig().xLogin,
+                'X-Trans-Key': this.dLocal.getConfig().transKey,
                 'Authorization': authorization,
                 'Content-Type': 'application/json',
             },
@@ -46,15 +41,15 @@ export class Cards {
 
     async getCard(cardId: string): Promise<any> {
         const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
+        const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey);
 
         const config: AxiosRequestConfig = {
             method: 'get',
-            url: `${this.DLOCAL_HOST}/cards/${cardId}`,
+            url: `${this.dLocal.getConfig().host}/cards/${cardId}`,
             headers: {
                 'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'X-Login': this.dLocal.getConfig().xLogin,
+                'X-Trans-Key': this.dLocal.getConfig().transKey,
                 'Authorization': authorization,
                 'Content-Type': 'application/json',
             }
@@ -74,15 +69,15 @@ export class Cards {
 
     async deleteCard(cardId: string): Promise<any> {
         const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
+        const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey);
 
         const config: AxiosRequestConfig = {
             method: 'delete',
-            url: `${this.DLOCAL_HOST}/secure_cards/${cardId}`,
+            url: `${this.dLocal.getConfig().host}/secure_cards/${cardId}`,
             headers: {
                 'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'X-Login': this.dLocal.getConfig().xLogin,
+                'X-Trans-Key': this.dLocal.getConfig().transKey,
                 'Authorization': authorization,
                 'Content-Type': 'application/json',
             }
@@ -103,15 +98,15 @@ export class Cards {
     async associateCard(customerId: string, payload: any): Promise<any> {
         const data = JSON.stringify(payload);
         const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY, data);
+        const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey, data);
 
         const config: AxiosRequestConfig = {
             method: 'post',
-            url: `${this.DLOCAL_HOST}/customers/${customerId}/cards`,
+            url: `${this.dLocal.getConfig().host}/customers/${customerId}/cards`,
             headers: {
                 'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'X-Login': this.dLocal.getConfig().xLogin,
+                'X-Trans-Key': this.dLocal.getConfig().transKey,
                 'Authorization': authorization,
                 'Content-Type': 'application/json',
             },
@@ -130,17 +125,17 @@ export class Cards {
         }
     }
 
-    async retriveCustomerCards(customerId: string): Promise<any> {
+    async retrieveCustomerCards(customerId: string): Promise<any> {
         const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
+        const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey);
 
         const config: AxiosRequestConfig = {
             method: 'get',
-            url: `${this.DLOCAL_HOST}/customers/${customerId}/cards`,
+            url: `${this.dLocal.getConfig().host}/customers/${customerId}/cards`,
             headers: {
                 'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'X-Login': this.dLocal.getConfig().xLogin,
+                'X-Trans-Key': this.dLocal.getConfig().transKey,
                 'Authorization': authorization,
                 'Content-Type': 'application/json',
             }
@@ -158,17 +153,18 @@ export class Cards {
         }
     }
 
-    async retriveCustomerCard(customerId: string, cardId: string): Promise<any> {
+
+    async retrieveCustomerCard(customerId: string, cardId: string): Promise<any> {
         const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
+        const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey);
 
         const config: AxiosRequestConfig = {
             method: 'get',
-            url: `${this.DLOCAL_HOST}/customers/${customerId}/cards/${cardId}`,
+            url: `${this.dLocal.getConfig().host}/customers/${customerId}/cards/${cardId}`,
             headers: {
                 'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'X-Login': this.dLocal.getConfig().xLogin,
+                'X-Trans-Key': this.dLocal.getConfig().transKey,
                 'Authorization': authorization,
                 'Content-Type': 'application/json',
             }
@@ -188,15 +184,15 @@ export class Cards {
 
     async removeCustomerCard(customerId: string, cardId: string): Promise<any> {
         const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
+        const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey);
 
         const config: AxiosRequestConfig = {
             method: 'delete',
-            url: `${this.DLOCAL_HOST}/customers/${customerId}/cards/${cardId}`,
+            url: `${this.dLocal.getConfig().host}/customers/${customerId}/cards/${cardId}`,
             headers: {
                 'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
+                'X-Login': this.dLocal.getConfig().xLogin,
+                'X-Trans-Key': this.dLocal.getConfig().transKey,
                 'Authorization': authorization,
                 'Content-Type': 'application/json',
             }
@@ -213,7 +209,5 @@ export class Cards {
             }
         }
     }
-
-
 
 }
