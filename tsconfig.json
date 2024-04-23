@@ -4,6 +4,6 @@
     "target": "es6",
     "esModuleInterop": true,
     "strict": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   }
 }

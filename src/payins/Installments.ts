@@ -1,4 +1,12 @@
-import axios, { AxiosRequestConfig } from 'axios'; // Import AxiosRequestConfig
+// Define an interface for the payload
+interface InstallmentsPayload {
+    country: string;
+    bin: string;
+    amount: number;
+    currency: string;
+}
+
+import axios, { AxiosRequestConfig } from 'axios';
 import { calculatePayinsSignature } from '../misc/Generators';
 
 export class Installments {
@@ -14,7 +22,7 @@ export class Installments {
         this.DLOCAL_SECRET_KEY = process.env.DLOCAL_SECRET_KEY as string;
     }
 
-    async createInstallmentsPlan(payload: any): Promise<any> {
+    async createInstallmentsPlan(payload: InstallmentsPayload): Promise<any> {
         const data = JSON.stringify(payload);
         const timestamp = new Date().toJSON();
         const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY, data);
@@ -43,5 +51,4 @@ export class Installments {
             }
         }
     }
-
 }

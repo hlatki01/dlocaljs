@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'; // Import AxiosRequestConfig
+import axios, { AxiosRequestConfig } from 'axios';
 import { calculatePayinsSignature } from '../misc/Generators';
 
 export class Payins {
@@ -128,58 +128,4 @@ export class Payins {
         }
     }
 
-    async getPaymentMethods(iso: string): Promise<any> {
-        const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
-        const config: AxiosRequestConfig = {
-            method: 'get',
-            url: `${this.DLOCAL_HOST}/payments-methods?country=${iso}`,
-            headers: {
-                'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
-                'Authorization': authorization,
-                'Content-Type': 'application/json',
-            }
-        };
-
-        try {
-            const response = await axios.request(config);
-            return response.data;
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error) && error.response) {
-                throw error.response.data.message;
-            } else {
-                throw (error as Error).message;
-            }
-        }
-    }
-
-    async getCurrencyExchange(currency: string): Promise<any> {
-        const timestamp = new Date().toJSON();
-        const authorization = calculatePayinsSignature(timestamp, this.DLOCAL_X_LOGIN, this.DLOCAL_SECRET_KEY);
-
-        const config: AxiosRequestConfig = {
-            method: 'get',
-            url: `${this.DLOCAL_HOST}/currency-exchanges?from=USD&to=${currency}`,
-            headers: {
-                'X-Date': timestamp,
-                'X-Login': this.DLOCAL_X_LOGIN,
-                'X-Trans-Key': this.DLOCAL_TRANS_KEY,
-                'Authorization': authorization,
-                'Content-Type': 'application/json',
-            }
-        };
-
-        try {
-            const response = await axios.request(config);
-            return response.data;
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error) && error.response) {
-                throw error.response.data.message;
-            } else {
-                throw (error as Error).message;
-            }
-        }
-    }
 }
