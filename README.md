@@ -8,7 +8,13 @@ A Node.js library for interacting with the DLocal API.
 You can install the library via npm:
 
 ```bash
-npm install @hlatki01/dlocaljs@0.0.2
+npm install dlocaljs
+```
+
+or if its locally
+
+```bash
+npm install .\dlocaljs-1.0.0.tgz
 ```
 
 ## Usage
