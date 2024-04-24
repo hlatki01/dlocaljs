@@ -11,12 +11,6 @@ You can install the library via npm:
 npm install dlocaljs
 ```
 
-or if its locally
-
-```bash
-npm install .\dlocaljs-1.0.0.tgz
-```
-
 ## Usage
 
 ```javascript
