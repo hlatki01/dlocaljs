@@ -1,6 +1,6 @@
 {
-  "name": "dlocaljs",
-  "version": "0.0.1",
+  "name": "@hlatki01/dlocaljs",
+  "version": "0.0.2",
   "description": "A Node.js library for interacting with the DLocal API.",
   "main": "index.js",
   "keywords": [
@@ -23,8 +23,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/hlatki01/dlocaljs.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   }
 }
