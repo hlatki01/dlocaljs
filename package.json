@@ -1,23 +1,30 @@
 {
-    "name": "dlocaljs",
-    "version": "0.0.4",
-    "description": "A Node.js library for interacting with the DLocal API.",
-    "main": "index.js",
-    "keywords": ["dlocal", "payments", "api", "library"],
-    "author": "Luis Hlatki",
-    "license": "MIT",
-    "dependencies": {
-      "axios": "^0.24.0",
-      "crypto": "^1.0.1"
-    },
-    "devDependencies": {
-      "@types/node": "^20.12.7",
-      "ts-node": "^10.9.2",
-      "typescript": "^5.4.5"
-    },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/hlatki01/dlocaljs.git"
-    }
+  "name": "dlocaljs",
+  "version": "0.0.1",
+  "description": "A Node.js library for interacting with the DLocal API.",
+  "main": "index.js",
+  "keywords": [
+    "dlocal",
+    "payments",
+    "api",
+    "library"
+  ],
+  "author": "Luis Hlatki",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hlatki01/dlocaljs.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
-  
+}
