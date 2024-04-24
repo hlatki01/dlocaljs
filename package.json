@@ -1,6 +1,6 @@
 {
-  "name": "@hlatki01/dlocaljs",
-  "version": "0.0.2",
+  "name": "dlocaljs",
+  "version": "0.0.1",
   "description": "A Node.js library for interacting with the DLocal API.",
   "main": "index.js",
   "keywords": [
