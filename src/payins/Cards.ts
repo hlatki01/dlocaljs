@@ -1,3 +1,51 @@
+// Define the interface for the payload
+interface Address {
+    state?: string;
+    city?: string;
+    zip_code?: string;
+    street?: string;
+    number?: string;
+    ip?: string;
+    device_id?: string;
+}
+
+export interface Payer {
+    name: string;
+    email: string;
+    birth_date?: string;
+    phone?: string;
+    document: string;
+    document2?: string;
+    user_reference?: string;
+    address?: Address;
+}
+
+export interface Card {
+    holder_name: string;
+    expiration_month: number;
+    expiration_year: number;
+    number: string;
+    cvv?: string; // Optional for India and if save=true
+    encrypted_data?: string;
+    token?: string;
+    cvv_token?: string;
+    card_id?: string;
+    installments?: string;
+    installments_id?: string;
+    descriptor?: string;
+    capture?: boolean;
+    save?: boolean;
+    stored_credential_type?: string;
+    stored_credential_usage?: string;
+}
+
+
+interface CardPayload {
+    country?: string;
+    card: Card;
+    payer: Payer;
+}
+
 import axios, { AxiosRequestConfig } from 'axios';
 import { calculatePayinsSignature } from '../misc/Generators';
 import { Instance } from '../Instance'; // Import the Instance class
@@ -9,8 +57,8 @@ export class Cards {
         this.dLocal = dLocal;
     }
 
-    async createCard(payload: any): Promise<any> {
-        const data = JSON.stringify(payload);
+    async createCard(cardPayload: CardPayload): Promise<any> {
+        const data = JSON.stringify(cardPayload);
         const timestamp = new Date().toJSON();
         const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey, data);
 
@@ -95,8 +143,8 @@ export class Cards {
         }
     }
 
-    async associateCard(customerId: string, payload: any): Promise<any> {
-        const data = JSON.stringify(payload);
+    async associateCard(customerId: string, cardPayload: CardPayload): Promise<any> {
+        const data = JSON.stringify(cardPayload);
         const timestamp = new Date().toJSON();
         const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey, data);
 

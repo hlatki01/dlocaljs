@@ -1,3 +1,9 @@
+// Define the interface for the query parameters
+interface ExchangeRateParams {
+    from: string;
+    to: string;
+}
+
 import axios, { AxiosRequestConfig } from 'axios';
 import { calculatePayinsSignature } from '../misc/Generators';
 import { Instance } from '../Instance'; // Import the Instance class
@@ -9,13 +15,13 @@ export class ExchangeRate {
         this.dLocal = dLocal;
     }
 
-    async getCurrencyExchange(from: string, to: string): Promise<any> {
+    async getCurrencyExchange(params: ExchangeRateParams): Promise<any> {
         const timestamp = new Date().toJSON();
         const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey);
 
         const config: AxiosRequestConfig = {
             method: 'get',
-            url: `${this.dLocal.getConfig().host}/currency-exchanges?from=${from}&to=${to}`,
+            url: `${this.dLocal.getConfig().host}/currency-exchanges?from=${params.from}&to=${params.to}`,
             headers: {
                 'X-Date': timestamp,
                 'X-Login': this.dLocal.getConfig().xLogin,
