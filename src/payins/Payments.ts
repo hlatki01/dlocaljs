@@ -260,6 +260,12 @@ interface PaymentPayload {
     splits?: Split[];
 }
 
+interface AuthorizationPayload {
+    authorization_id: string;
+    amount?: number;
+    currency?: string;
+    order_id?: string;
+}
 
 import axios, { AxiosRequestConfig } from 'axios';
 import { calculatePayinsSignature } from '../misc/Generators';
@@ -386,4 +392,39 @@ export class Payments {
             }
         }
     }
+
+    async authorizationCapture(authorizationPayload: AuthorizationPayload): Promise<any> {
+        const data = JSON.stringify(authorizationPayload);
+        const timestamp = new Date().toJSON();
+        const authorization = calculatePayinsSignature(timestamp, this.dLocal.getConfig().xLogin, this.dLocal.getConfig().secretKey);
+
+        const config: AxiosRequestConfig = {
+            method: 'post',
+            url: `${this.dLocal.getConfig().host}/payments`,
+            headers: {
+                'X-Date': timestamp,
+                'X-Login': this.dLocal.getConfig().xLogin,
+                'X-Trans-Key': this.dLocal.getConfig().transKey,
+                'Authorization': authorization,
+                'Content-Type': 'application/json',
+            },
+            data: data
+        };
+
+        try {
+            const response = await axios.request(config);
+            return response.data;
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error) && error.response) {
+                throw error.response.data.message;
+            } else {
+                throw (error as Error).message;
+            }
+        }
+    }
+
+    async authorizationCancel(authorizationId: string): Promise<any> {
+        return this.cancelPayment(authorizationId)
+    }
+
 }

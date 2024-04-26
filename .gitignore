@@ -4,3 +4,6 @@ node_modules/
 package-lock.json
 *.js
 *.tgz
+tests/
+jest.config.js
+.env

@@ -19,3 +19,13 @@ export function calculatePayinsSignature(timestamp: string, xLogin: string, secr
 
     return `V2-HMAC-SHA256, Signature: ${signature}`;
 }
+
+export function calculatePayoutsSignature(xLogin: string, secretKey: string, xTransKey: string, body?: any): string {
+    if (!xLogin || !secretKey || !xTransKey) {
+        throw new Error('DLocal environment variables are not set.');
+    }
+       
+    const hmac = crypto.createHmac('sha256', secretKey);
+    hmac.update(JSON.stringify(body));
+    return hmac.digest('hex');
+}

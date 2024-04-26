@@ -1,11 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios'; // Import AxiosRequestConfig
-import { calculatePayinsSignature } from './misc/Generators';
-import { Installments } from './payins/Installments';
-import { PaymentMethods } from './payins/PaymentMethods';
-import { Payments } from './payins/Payments';
-import { ExchangeRate } from './payins/ExchangeRate';
-import { Customers } from './payins/Customers';
-import { Cards } from './payins/Cards';
+import { Payouts } from "./payouts/Payouts";
+import { Payins } from "./payins/Payins";
 
 interface DLocalConfig {
     host: string;
@@ -38,27 +32,12 @@ export class Instance {
         return this.config;
     }
 
-    get installments(): Installments {
-        return new Installments(this);
+    getPayouts(): Payouts {
+        return new Payouts(this);
+    }
+    
+    getPayins(): Payins {
+        return new Payins(this);
     }
 
-    get paymentMethods(): PaymentMethods {
-        return new PaymentMethods(this);
-    }
-
-    get payments(): Payments {
-        return new Payments(this);
-    }
-
-    get exchangeRate(): ExchangeRate {
-        return new ExchangeRate(this);
-    }
-
-    get customers(): Customers {
-        return new Customers(this);
-    }
-
-    get cards(): Cards {
-        return new Cards(this);
-    }
 }

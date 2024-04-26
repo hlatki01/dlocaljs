@@ -14,7 +14,7 @@ npm install dlocaljs
 or if its locally
 
 ```bash
-npm install .\dlocaljs-1.0.0.tgz
+npm install {{file-path}}\dlocaljs-{{version}}.tgz
 ```
 
 ## Usage
@@ -27,42 +27,19 @@ const dLocal = dLocalInstance.getInstance(process.env.DLOCAL_HOST, process.env.D
 
 // Use the methods provided by the dLocal instace
 // For example:
-await dLocal.installments.createInstallmentsPlan({amount, bin, currency, country}).then(response => {
-    console.log(response);
-  })
-  .catch(error => {
-    console.error(error);
-  });
-
-```
-
-### Example
-
-```javascript
-const dLocal = dLocalInstance.getInstance(process.env.DLOCAL_HOST, process.env.DLOCAL_X_LOGIN, process.env.DLOCAL_TRANS_KEY, process.env.DLOCAL_SECRET_KEY)
-
-class PaymentsController {
-
-    async createInstallmentsPlan(req: Request, res: Response) {
-        try {
-            const { amount, bin, currency, country } = req.body;
-            const installments = await dLocal.installments.createInstallmentsPlan({
-                amount,
-                bin,
-                currency,
-                country
-            }).then(response => {
-                console.log(response);
-            })
-                .catch(error => {
-                    console.error(error);
-                });
-
-            res.status(200).json(installments);
-        } catch (error) {
-            console.error("Error", error);
-            res.status(500).json({ error: "" + error });
-        }
+async createInstallmentsPlan(req: Request, res: Response) {
+    try {
+        const { amount, bin, currency, country } = req.body;
+        const installments = await dLocal.getPayins().installments.createInstallmentsPlan({
+            amount,
+            bin,
+            currency,
+            country
+        })
+        res.status(200).json(installments);
+    } catch (error) {
+        console.error("Error", error);
+        res.status(500).json({ error: "" + error });
     }
 }
 ```
